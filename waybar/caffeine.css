@@ -1,0 +1,19 @@
+#custom-caffeine {
+  min-width: 1.2em;
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+#custom-caffeine.activated {
+  color: @wb-act-bg;
+  opacity: 1;
+}
+
+#custom-caffeine.deactivated {
+  color: @main-fg;
+  opacity: 0.68;
+}
+
+#custom-caffeine:hover {
+  color: @wb-hvr-bg;
+  opacity: 1;
+}
