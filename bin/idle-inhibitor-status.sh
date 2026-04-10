@@ -1,39 +1,23 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SERVICE_NAME="${CAFFEINE_SERVICE_NAME:-caffeine-mode.service}"
-STATE_DIR="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
-PIDFILE="${STATE_DIR}/caffeine-mode.pid"
-ACTIVE_TEXT="${CAFFEINE_ACTIVE_TEXT:-ON}"
-INACTIVE_TEXT="${CAFFEINE_INACTIVE_TEXT:-OFF}"
-REQUIRE_SERVICE="${CAFFEINE_REQUIRE_SERVICE:-0}"
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPO_HELPER="$SCRIPT_DIR/../lib/caffeine-common.sh"
+INSTALLED_HELPER="${XDG_DATA_HOME:-$HOME/.local/share}/hyprland-caffeine-mode/lib/caffeine-common.sh"
 
-json_escape() {
-    local value="${1-}"
-    value="${value//\\/\\\\}"
-    value="${value//\"/\\\"}"
-    value="${value//$'\n'/\\n}"
-    value="${value//$'\r'/\\r}"
-    value="${value//$'\t'/\\t}"
-    printf '%s' "$value"
-}
-
-service_active() {
-    command -v systemctl >/dev/null 2>&1 || return 1
-    systemctl --user is-active --quiet "$SERVICE_NAME"
-}
-
-fallback_active() {
-    local pid
-
-    [[ -f "$PIDFILE" ]] || return 1
-    pid="$(<"$PIDFILE")"
-    [[ "$pid" =~ ^[0-9]+$ ]] || return 1
-    kill -0 "$pid" 2>/dev/null
-}
+if [[ -f "$REPO_HELPER" ]]; then
+    # shellcheck source=../lib/caffeine-common.sh
+    source "$REPO_HELPER"
+elif [[ -f "$INSTALLED_HELPER" ]]; then
+    # shellcheck source=/dev/null
+    source "$INSTALLED_HELPER"
+else
+    printf 'Unable to locate caffeine-common.sh\n' >&2
+    exit 1
+fi
 
 print_plain_status() {
-    if service_active || { [[ "$REQUIRE_SERVICE" != "1" ]] && fallback_active; }; then
+    if is_active; then
         printf 'activated\n'
     else
         printf 'deactivated\n'
@@ -42,23 +26,21 @@ print_plain_status() {
 
 print_waybar_json() {
     local state text tooltip class
+    local backend
 
-    if service_active; then
-        state="activated"
-        text="$ACTIVE_TEXT"
-        class="activated"
-        tooltip="Caffeine mode active"$'\n'"Managed by systemd user service"
-    elif [[ "$REQUIRE_SERVICE" != "1" ]] && fallback_active; then
-        state="activated"
-        text="$ACTIVE_TEXT"
-        class="activated"
-        tooltip="Caffeine mode active"$'\n'"Managed by background fallback process"
-    else
+    backend="$(current_backend)"
+
+    if [[ "$backend" == "none" ]]; then
         state="deactivated"
         text="$INACTIVE_TEXT"
         class="deactivated"
-        tooltip="Caffeine mode inactive"$'\n'"System will follow normal idle settings"
+    else
+        state="activated"
+        text="$ACTIVE_TEXT"
+        class="activated"
     fi
+
+    tooltip="$(backend_tooltip "$backend")"
 
     printf '{"text":"%s","alt":"%s","tooltip":"%s","class":"%s"}\n' \
         "$(json_escape "$text")" \

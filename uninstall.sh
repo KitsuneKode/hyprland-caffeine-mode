@@ -3,6 +3,7 @@ set -euo pipefail
 
 rm -f "$HOME/.local/bin/idle-inhibitor-toggle.sh"
 rm -f "$HOME/.local/bin/idle-inhibitor-status.sh"
+rm -f "$HOME/.local/share/hyprland-caffeine-mode/lib/caffeine-common.sh"
 rm -f "$HOME/.config/systemd/user/caffeine-mode.service"
 rm -f "$HOME/.local/share/waybar/modules/custom-caffeine.jsonc"
 rm -f "$HOME/.local/share/waybar/styles/classes/caffeine.css"

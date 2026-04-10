@@ -44,10 +44,12 @@ Compared to a Python Wayland client or a polling daemon, this is usually simpler
 
 ## Files
 
+- `lib/caffeine-common.sh`
+  Shared helper for config, backend detection, JSON escaping, and common state helpers.
 - `bin/idle-inhibitor-toggle.sh`
-  Main command. Supports `toggle`, `on`, `off`, `status`, and `waybar`.
+  Write-oriented command. Handles `toggle`, `on`, and `off`, and delegates read commands for compatibility.
 - `bin/idle-inhibitor-status.sh`
-  Lightweight status script for Waybar and plain status checks.
+  Read-only status path for Waybar and plain status checks.
 - `systemd/caffeine-mode.service`
   Preferred backend for session-wide idle inhibition.
 - `waybar/custom-caffeine.jsonc`
@@ -81,6 +83,7 @@ Optional:
 
 This installs:
 
+- `~/.local/share/hyprland-caffeine-mode/lib/caffeine-common.sh`
 - `~/.local/bin/idle-inhibitor-toggle.sh`
 - `~/.local/bin/idle-inhibitor-status.sh`
 - `~/.config/systemd/user/caffeine-mode.service`
@@ -164,6 +167,16 @@ idle-inhibitor-status.sh waybar
 ## Why Not Use Waybar's Built-in `idle_inhibitor`?
 
 Because it is not a compositor-global state indicator. It is Waybar's own toggle state. If you want keybinds, scripts, and the bar to reflect the same state, a custom module with one shared backend is the cleaner approach.
+
+## Why Two Scripts?
+
+This repo intentionally keeps:
+
+- one write-oriented entrypoint for side effects
+- one read-only entrypoint for Waybar/status checks
+- one shared helper to avoid logic duplication
+
+That keeps the Waybar path small and predictable while still avoiding copy-pasted logic.
 
 ## Uninstall
 

@@ -8,10 +8,12 @@ state using `systemd --user` as the preferred backend.
 
 ## Main Files
 
+- `lib/caffeine-common.sh`
+  Shared helper. Prefer moving shared state logic here instead of duplicating it in entrypoints.
 - `bin/idle-inhibitor-toggle.sh`
-  Main control script. Handles `toggle`, `on`, `off`, `status`, and `waybar`.
+  Main write entrypoint. Owns side effects.
 - `bin/idle-inhibitor-status.sh`
-  Lightweight Waybar/status path. Keep this small and cheap.
+  Lightweight read entrypoint for Waybar/status checks. Keep this small and cheap.
 - `systemd/caffeine-mode.service`
   Preferred backend. This is the intended source of truth in normal installs.
 - `waybar/custom-caffeine.jsonc`
@@ -28,6 +30,7 @@ state using `systemd --user` as the preferred backend.
 - Prefer `systemd --user` over custom daemons.
 - Avoid polling where possible.
 - Keep the Waybar status path lightweight.
+- Keep one writer entrypoint and one reader entrypoint, with shared logic in `lib/`.
 - Do not introduce Python or background loops unless there is a strong reason.
 - Preserve portability across Hyprland setups instead of baking in local paths.
 
