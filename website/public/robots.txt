@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hyprland-caffiene-mode.kitsunelabs.xyz/sitemap.xml

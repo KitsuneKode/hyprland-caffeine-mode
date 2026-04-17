@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" fill="#050505"/>
+  <defs>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#111111" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="400" height="400" fill="url(#grid)"/>
+  
+  <rect x="50" y="50" width="300" height="300" fill="rgba(5, 5, 5, 0.9)" stroke="#222222" stroke-width="4"/>
+  <rect x="48" y="48" width="304" height="6" fill="#d4af37"/>
+  
+  <!-- Industrial Coffee Cup -->
+  <path d="M 120 130 L 240 130 L 240 250 L 120 250 Z" fill="none" stroke="#e0e0e0" stroke-width="16" stroke-linejoin="miter"/>
+  <!-- Handle -->
+  <path d="M 240 160 L 280 160 L 280 220 L 240 220" fill="none" stroke="#e0e0e0" stroke-width="16" stroke-linejoin="miter"/>
+  
+  <!-- Steam lines (geometric) -->
+  <path d="M 150 80 L 150 110 M 180 70 L 180 110 M 210 80 L 210 110" fill="none" stroke="#d4af37" stroke-width="12" stroke-linecap="square"/>
+  
+  <!-- UI Accents -->
+  <rect x="60" y="320" width="20" height="20" fill="#222222"/>
+  <rect x="90" y="320" width="20" height="20" fill="#d4af37"/>
+  
+  <text x="340" y="335" font-family="monospace" font-size="16" fill="#888888" text-anchor="end">SYS_INH</text>
+  <text x="340" y="65" font-family="monospace" font-size="12" fill="#d4af37" text-anchor="end">[ ON ]</text>
+</svg>
