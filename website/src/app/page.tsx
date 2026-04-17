@@ -240,7 +240,7 @@ export default function Home() {
               Toggle caffeine mode instantly via your keyboard. State syncs automatically to Waybar.
             </p>
             <CodeBlock
-              code={`# ~/.config/hypr/hyprland.conf\nbind = $mainMod, C, exec, CAFFEINE_REQUIRE_SERVICE=1 CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh toggle`}
+              code={`# ~/.config/hypr/hyprland.conf\nbind = $mainMod, C, exec, CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh toggle`}
             />
           </div>
           <div>

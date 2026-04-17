@@ -27,11 +27,12 @@ Commands:
   status  Print "activated" or "deactivated"
   waybar  Print Waybar-compatible JSON
 
-Behavior:
-  - Preferred backend: a user systemd service named caffeine-mode.service
-  - Fallback backend: a managed background systemd-inhibit process
-  - Set CAFFEINE_REQUIRE_SERVICE=1 to disable the fallback backend
-  - Set CAFFEINE_WAYBAR_SIGNAL=N to notify Waybar via SIGRTMIN+N after state changes
+Requires:
+  - systemd --user
+  - caffeine-mode.service installed and enabled
+
+Environment:
+  - CAFFEINE_WAYBAR_SIGNAL=N  Notify Waybar via SIGRTMIN+N after state changes
 EOF
 }
 
@@ -43,54 +44,23 @@ stop_service() {
     systemctl --user stop "$SERVICE_NAME"
 }
 
-start_fallback() {
-    local pid
-
-    if fallback_pid >/dev/null; then
-        return 0
-    fi
-
-    nohup systemd-inhibit \
-        --what=idle \
-        --who="$WHO" \
-        --why="$WHY" \
-        --mode="$MODE" \
-        sleep infinity >/dev/null 2>&1 &
-    pid=$!
-    printf '%s\n' "$pid" >"$PIDFILE"
-    sleep 0.1
-
-    if ! kill -0 "$pid" 2>/dev/null; then
-        rm -f "$PIDFILE"
-        echo "Failed to start systemd-inhibit fallback process." >&2
-        exit 1
-    fi
-}
-
-stop_fallback() {
-    local pid
-
-    if ! pid="$(fallback_pid)"; then
-        return 0
-    fi
-
-    kill "$pid" >/dev/null 2>&1 || true
-    rm -f "$PIDFILE"
-}
-
 start_caffeine() {
     if is_active; then
         return 0
     fi
 
-    if have_user_systemd && service_exists; then
-        start_service
-    elif [[ "$REQUIRE_SERVICE" == "1" ]]; then
-        echo "caffeine-mode.service is required but was not found in the user systemd manager." >&2
+    if ! have_user_systemd; then
+        printf 'Error: systemd --user is not available.\n' >&2
         exit 1
-    else
-        start_fallback
     fi
+
+    if ! service_exists; then
+        printf 'Error: %s is not installed.\n' "$SERVICE_NAME" >&2
+        printf 'Run: systemctl --user enable --now %s\n' "$SERVICE_NAME" >&2
+        exit 1
+    fi
+
+    start_service
 
     notify_state "Caffeine Mode" "Activated"
     notify_waybar
@@ -101,8 +71,7 @@ stop_caffeine() {
     backend="$(current_backend)"
     [[ "$backend" == "none" ]] && return 0
 
-    [[ "$backend" == "systemd" ]] && stop_service
-    stop_fallback
+    stop_service
     notify_state "Caffeine Mode" "Deactivated"
     notify_waybar
 }

@@ -2,11 +2,12 @@
   "custom/caffeine": {
     "return-type": "json",
     "format": "{text}",
-    "exec": "CAFFEINE_REQUIRE_SERVICE=1 CAFFEINE_ACTIVE_TEXT='\udb80\udd76' CAFFEINE_INACTIVE_TEXT='\udb81\udeca' ~/.local/bin/idle-inhibitor-status.sh",
+    "exec": "CAFFEINE_ACTIVE_TEXT='󰅶' CAFFEINE_INACTIVE_TEXT='󰾪' ~/.local/bin/idle-inhibitor-status.sh",
     "interval": "once",
     "signal": 20,
     "tooltip": true,
-    "on-click": "CAFFEINE_REQUIRE_SERVICE=1 CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh toggle",
-    "on-click-right": "CAFFEINE_REQUIRE_SERVICE=1 CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh off"
+    "on-click": "CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh toggle",
+    "on-click-right": "CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh off"
   }
+}
 }
