@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if command -v systemctl >/dev/null 2>&1; then
+    systemctl --user stop caffeine-mode.service 2>/dev/null || true
+    systemctl --user disable caffeine-mode.service 2>/dev/null || true
+fi
+
 rm -f "$HOME/.local/bin/idle-inhibitor-toggle.sh"
 rm -f "$HOME/.local/bin/idle-inhibitor-status.sh"
 rm -f "$HOME/.local/share/hyprland-caffeine-mode/lib/caffeine-common.sh"

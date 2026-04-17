@@ -166,7 +166,12 @@ idle-inhibitor-status.sh waybar
 
 ## Why Not Use Waybar's Built-in `idle_inhibitor`?
 
-Because it is not a compositor-global state indicator. It is Waybar's own toggle state. If you want keybinds, scripts, and the bar to reflect the same state, a custom module with one shared backend is the cleaner approach.
+Two concrete failure modes:
+
+- **Waybar crashes or restarts** — the built-in module restarts in the default (inactive) state, even if you had caffeine mode enabled. Your session is now unprotected with no indication.
+- **Theme changes reload Waybar** — any `pkill -SIGUSR2 waybar` or full restart drops the built-in toggle state. This happens routinely with theme managers, ricing scripts, or even `hyprctl dispatch exec`.
+
+Beyond those: the built-in toggle is Waybar-internal state only. A keybind bound to an external script cannot see or control it. This project uses `systemd --user` as the source of truth, so Waybar, keybinds, and scripts all read and write the same state — and that state survives Waybar restarts and theme reloads.
 
 ## Why Two Scripts?
 

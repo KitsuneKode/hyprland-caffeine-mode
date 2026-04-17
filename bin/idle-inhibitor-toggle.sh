@@ -97,14 +97,11 @@ start_caffeine() {
 }
 
 stop_caffeine() {
-    if ! is_active; then
-        return 0
-    fi
+    local backend
+    backend="$(current_backend)"
+    [[ "$backend" == "none" ]] && return 0
 
-    if have_user_systemd && service_exists && service_active; then
-        stop_service
-    fi
-
+    [[ "$backend" == "systemd" ]] && stop_service
     stop_fallback
     notify_state "Caffeine Mode" "Deactivated"
     notify_waybar
