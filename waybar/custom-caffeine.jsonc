@@ -7,7 +7,6 @@
     "signal": 20,
     "tooltip": true,
     "on-click": "CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh toggle",
-    "on-click-right": "CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh off"
-  }
-}
+    "on-click-right": "CAFFEINE_WAYBAR_SIGNAL=20 ~/.local/bin/idle-inhibitor-toggle.sh off",
+  },
 }
