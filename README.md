@@ -2,7 +2,7 @@
 
 Manual idle inhibition for Hyprland that works with Waybar and Hypridle.
 
-**Website:** [https://hyprland-caffeine-mode.kitsunekode.xyz](https://hyprland-caffeine-mode.kitsunekode.xyz)
+**Website:** [https://hyprland-caffiene-mode.kitsunelabs.xyz](https://hyprland-caffiene-mode.kitsunelabs.xyz)
 
 ## Why
 
@@ -14,6 +14,7 @@ Waybar's built-in `idle_inhibitor` is internal-only. Toggle it from a keybind an
 # 1. Install
 ./install.sh
 
+#(Optional: only enable if you want idle_inhibitor to be one by default)
 # 2. Enable the systemd service (so it runs on login, or just start manually)
 systemctl --user enable --now caffeine-mode.service
 
@@ -29,6 +30,7 @@ idle-inhibitor-status.sh waybar
 **Backend:** A `systemd --user` service runs `systemd-inhibit --what=idle sleep infinity` when active. That's it - one sleeping process.
 
 **Hypridle integration:** Already works. Just ensure in your `hypridle.conf`:
+
 ```ini
 general {
     ignore_systemd_inhibit = false
@@ -36,6 +38,7 @@ general {
 ```
 
 **Waybar integration:** Uses signal-based updates.
+
 - Set `CAFFEINE_WAYBAR_SIGNAL=20` to send `SIGRTMIN+20` on toggle
 - Waybar listens with `"signal": 20`
 - No polling - instant updates
@@ -53,6 +56,7 @@ general {
 ```
 
 This installs:
+
 - `~/.local/bin/idle-inhibitor-toggle.sh`
 - `~/.local/bin/idle-inhibitor-status.sh`
 - `~/.local/share/hyprland-caffeine-mode/lib/caffeine-common.sh`
