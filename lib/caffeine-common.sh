@@ -6,7 +6,7 @@ WHY="${CAFFEINE_WHY:-Manual idle inhibition}"
 MODE="${CAFFEINE_MODE:-block}"
 ACTIVE_TEXT="${CAFFEINE_ACTIVE_TEXT:-ON}"
 INACTIVE_TEXT="${CAFFEINE_INACTIVE_TEXT:-OFF}"
-WAYBAR_SIGNAL="${CAFFEINE_WAYBAR_SIGNAL:-}"
+WAYBAR_SIGNAL="${CAFFEINE_WAYBAR_SIGNAL:-20}"
 
 json_escape() {
     local value="${1-}"
@@ -28,7 +28,11 @@ notify_state() {
 }
 
 notify_waybar() {
-    [[ -n "$WAYBAR_SIGNAL" ]] || return 0
+    case "$WAYBAR_SIGNAL" in
+        ""|0|none|off|false)
+            return 0
+            ;;
+    esac
 
     if command -v pkill >/dev/null 2>&1; then
         pkill "-RTMIN+${WAYBAR_SIGNAL}" waybar >/dev/null 2>&1 || true
@@ -48,7 +52,7 @@ service_active() {
 }
 
 current_backend() {
-    if have_user_systemd && service_exists && service_active; then
+    if have_user_systemd && service_active; then
         printf 'systemd\n'
         return 0
     fi
